@@ -6,6 +6,9 @@ version: "1.0.0"
 
 # OpenWeather Forecast Skill
 
+## Prerequisites
+This skill requires an OpenWeatherMap API key. Run `python validate_setup.py` to check if everything is configured correctly.
+
 When to use:
 - Whenever the user asks about current, future, or comparative weather (temperature, rain, snow, UV, wind, sunrise, etc.).
 - When the user references travel plans, outdoor events, or “should I” weather-dependent questions.
@@ -31,4 +34,7 @@ Behavior:
 
 Error handling:
 - If location or date missing: ask the user to clarify.
-- If API unavailable: say “I wasn’t able to reach the weather service right now.”
+- If API unavailable: say "I wasn't able to reach the weather service right now."
+- If `missing_api_key` error: inform the user that the weather service isn't properly configured (system issue).
+- If `location_not_found` error: ask for a more specific location or suggest nearby alternatives.
+- If API quota exceeded: explain that the service has reached its daily limit and to try again later.
