@@ -4,28 +4,24 @@ A Claude Skill that provides real-time weather forecasts using the OpenWeatherMa
 
 ## Quick Start
 
-### For Claude Users
+1. Clone this repository
+2. Get a free API key from [OpenWeatherMap](https://openweathermap.org/api)
+3. Run the build script and enter your API key when prompted: `./build.sh`
+4. Upload the generated zip to Claude.
 
-1. **Get an OpenWeatherMap API key** (free):
-   - Visit [OpenWeatherMap](https://openweathermap.org/api)
-   - Sign up for a free account (1,000 calls/day included)
-   - Generate an API key
+### Build Script Options
 
-2. **Configure the skill**:
-   - Open `forecast_skill/config.json`
-   - Replace `"PASTE_YOUR_API_KEY_HERE"` with your actual API key
-   - Save the file
-
-3. **Upload to Claude**:
-   - Upload the entire `forecast_skill` folder to Claude
-   - Start asking weather questions!
-
-**Example:**
-```json
-{"api_key": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"}
+```bash
+./build.sh                          # Interactive: prompts for API key
+./build.sh your_api_key_here        # Non-interactive: uses provided key
+./build.sh your_key custom-name.zip # Custom output filename
 ```
 
-See `forecast_skill/SETUP.txt` for detailed instructions.
+The build script will:
+- Inject your API key into config.json
+- Create a zip with files at the top level (no subfolders)
+- Validate the bundle structure
+- Ready for immediate upload to Claude
 
 ## Usage
 
@@ -35,24 +31,10 @@ Ask Claude weather questions and the skill automatically activates:
 - "Should I bring a jacket to Denver next week?"
 - "Compare the weather in London and Berlin next Monday"
 
-## For Developers
-
 ### Local Testing
 ```bash
 cd forecast_skill/skills
 python get_weather.py "London" "2025-11-12"
-```
-
-### File Structure
-```
-forecast_skill/
-├── SKILL.md              # Instructions for Claude
-├── config.json           # User configures API key here
-├── SETUP.txt             # Setup instructions
-├── skills/
-│   └── get_weather.py    # Weather script
-└── resources/
-    └── prompt_templates.md
 ```
 
 ## Troubleshooting
