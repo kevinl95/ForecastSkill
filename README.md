@@ -2,49 +2,69 @@
 
 A Claude Skill that provides real-time weather forecasts using the OpenWeatherMap API.
 
-## How This Works
+## Quick Start
 
-This skill is designed to work with Claude through Anthropic's platform. When properly configured, Claude can automatically call this skill to provide weather information in response to your questions.
+### For Claude Users
 
-## Setup for Skill Developers/Self-Hosted Usage
+1. **Get an OpenWeatherMap API key** (free):
+   - Visit [OpenWeatherMap](https://openweathermap.org/api)
+   - Sign up for a free account (1,000 calls/day included)
+   - Generate an API key
 
-If you're running this skill locally or integrating it into your own system:
+2. **Configure the skill**:
+   - Open `forecast_skill/config.json`
+   - Replace `"PASTE_YOUR_API_KEY_HERE"` with your actual API key
+   - Save the file
 
-### 1. Get an OpenWeatherMap API Key
+3. **Upload to Claude**:
+   - Upload the entire `forecast_skill` folder to Claude
+   - Start asking weather questions!
 
-1. Visit [OpenWeatherMap](https://openweathermap.org/api) and sign up for a free account
-2. Navigate to the API keys section in your account dashboard
-3. Generate a new API key (free tier allows 1,000 calls/day)
-
-### 2. Configure the API Key
-
-The skill expects the API key to be available as an environment variable `OWM_API_KEY`.
-
-**For local development/testing:**
-```bash
-export OWM_API_KEY="your_api_key_here"
-python forecast_skill/skills/get_weather.py "New York" "2025-11-12"
+**Example:**
+```json
+{"api_key": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"}
 ```
 
-**Note for Claude Web Users:** If you're using Claude through the web interface, the skill configuration and API key management is handled by Anthropic's infrastructure. You don't need to set environment variables yourself.
+See `forecast_skill/SETUP.txt` for detailed instructions.
 
 ## Usage
 
-This skill automatically activates when you ask Claude weather-related questions:
+Ask Claude weather questions and the skill automatically activates:
 - "What's the weather like in Paris tomorrow?"
 - "Will it rain in Seattle this weekend?"
 - "Should I bring a jacket to Denver next week?"
+- "Compare the weather in London and Berlin next Monday"
 
 ## For Developers
 
-If you're working on this skill or integrating it into your own systems, you can test it locally by setting the environment variable and running the script directly.
+### Local Testing
+```bash
+cd forecast_skill/skills
+python get_weather.py "London" "2025-11-12"
+```
+
+### File Structure
+```
+forecast_skill/
+├── SKILL.md              # Instructions for Claude
+├── config.json           # User configures API key here
+├── SETUP.txt             # Setup instructions
+├── skills/
+│   └── get_weather.py    # Weather script
+└── resources/
+    └── prompt_templates.md
+```
 
 ## Troubleshooting
 
-**For developers/self-hosted users:**
-- **"missing_api_key" error**: Set the OWM_API_KEY environment variable
-- **"location_not_found" error**: Try a more specific location name
-- **API timeout errors**: Check your internet connection
+**"missing_api_key" error**: 
+- Edit `config.json` and add your OpenWeatherMap API key
+- Make sure you replaced the placeholder text
 
-**For Claude web users:**
-If the skill isn't working, the issue is likely on Anthropic's side - API configuration, skill deployment, or service availability.
+**"invalid_api_key" error**: 
+- Verify your API key at https://openweathermap.org/api
+- Check for extra spaces or quotes in config.json
+
+**"location_not_found" error**: 
+- Try a more specific location name
+- Use format like "Paris, France" instead of just "Paris"

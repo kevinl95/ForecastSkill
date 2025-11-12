@@ -10,19 +10,53 @@ import json
 import urllib.request
 import urllib.parse
 
-def check_api_key():
-    """Check if API key is set and valid"""
-    print("🔑 Checking API key...")
+#!/usr/bin/env python3
+"""
+Validation script to check if the OpenWeather Forecast Skill is properly configured.
+Run this script to verify your config.json setup before uploading the skill to Claude.
+"""
+
+import os
+import sys
+import json
+import urllib.request
+import urllib.parse
+import urllib.error
+
+def check_config_file():
+    """Check if config.json exists and has a valid API key"""
+    print("� Checking config.json...")
     
-    api_key = os.getenv("OWM_API_KEY")
+    config_path = "forecast_skill/config.json"
+    if not os.path.exists(config_path):
+        print(f"❌ ERROR: {config_path} not found")
+        print("📖 This file should contain your OpenWeatherMap API key")
+        return False, None
+    
+    try:
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+    except json.JSONDecodeError:
+        print("❌ ERROR: config.json is not valid JSON")
+        print("📖 Check for syntax errors in the file")
+        return False, None
+    
+    api_key = config.get('api_key', '')
+    
     if not api_key:
-        print("❌ ERROR: OWM_API_KEY environment variable not set")
-        print("📖 Please see README.md for setup instructions")
-        return False
+        print("❌ ERROR: No 'api_key' field found in config.json")
+        return False, None
     
-    print(f"✅ API key found: {api_key[:8]}...")
+    if api_key == 'PASTE_YOUR_API_KEY_HERE':
+        print("❌ ERROR: API key not configured")
+        print("📖 Please edit config.json and replace the placeholder with your actual API key")
+        return False, None
     
-    # Test API key validity with a simple request
+    print(f"✅ Config file found with API key: {api_key[:8]}...")
+    return True, api_key
+    
+def test_api_key(api_key):
+    """Test if the API key works with a simple request"""
     print("🌐 Testing API key validity...")
     try:
         params = urllib.parse.urlencode({
@@ -111,23 +145,28 @@ def main():
     
     success = True
     
-    # Check API key
-    if not check_api_key():
+    # Check config file
+    config_valid, api_key = check_config_file()
+    if not config_valid:
         success = False
-    
-    # Check script functionality
-    if not check_script():
-        success = False
+    else:
+        # Test API key
+        if not test_api_key(api_key):
+            success = False
+        
+        # Test script functionality
+        if not check_script():
+            success = False
     
     print(f"\n{'='*50}")
     if success:
-        print("🎉 All checks passed! Your skill is ready to use.")
-        print("\nYou can now ask Claude weather questions like:")
+        print("🎉 All checks passed! Your skill is ready to upload to Claude.")
+        print("\nOnce uploaded, you can ask Claude weather questions like:")
         print("• 'What's the weather in Paris tomorrow?'")
         print("• 'Will it rain in Tokyo this weekend?'")
     else:
         print("❌ Setup incomplete. Please address the errors above.")
-        print("📖 See README.md for detailed setup instructions.")
+        print("📖 See SETUP.txt for detailed configuration instructions.")
     
     return 0 if success else 1
 
