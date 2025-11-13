@@ -6,18 +6,28 @@ A Claude Skill that provides real-time weather forecasts using the OpenWeatherMa
 
 1. Clone this repository
 2. Get a free API key from [OpenWeatherMap](https://openweathermap.org/api)
-3. Run the build script and enter your API key when prompted: `./build.sh`
+3. Run the build script and enter your API key when prompted:
+   - **Linux/macOS**: `./build.sh`
+   - **Windows**: `.\build.ps1`
 4. Upload the generated zip to Claude.
 
 ### Build Script Options
 
+**Bash (Linux/macOS):**
 ```bash
 ./build.sh                          # Interactive: prompts for API key
 ./build.sh your_api_key_here        # Non-interactive: uses provided key
 ./build.sh your_key custom-name.zip # Custom output filename
 ```
 
-The build script will:
+**PowerShell (Windows):**
+```powershell
+.\build.ps1                               # Interactive: prompts for API key
+.\build.ps1 -ApiKey your_api_key_here     # Non-interactive: uses provided key
+.\build.ps1 -ApiKey your_key -OutputName custom-name.zip # Custom output filename
+```
+
+Both build scripts will:
 - Inject your API key into config.json
 - Create a zip with files at the top level (no subfolders)
 - Validate the bundle structure
@@ -37,10 +47,40 @@ Ask Claude weather questions and the skill automatically activates:
 - "Which city has better weather this week, Berlin or Amsterdam?"
 - "Paris or Rome for a 5-day trip?"
 
+**Activity Recommendations:**
+- "Is it good weather for skiing in Colorado this week?"
+- "When should I plan a picnic in Central Park?"
+- "What are the best days for hiking in Portland?"
+- "Should I water my garden tomorrow?"
+
+Supported activities: skiing, picnic, hiking, gardening, beach, cycling
+
 ### Local Testing
+
+**Current Weather:**
 ```bash
-cd forecast_skill/skills
-python get_weather.py "London" "2025-11-12"
+cd forecast_skill
+python skills/get_weather.py current "London"
+```
+
+**Weather Forecast:**
+```bash
+python skills/get_weather.py forecast "London" 5
+```
+
+**Compare Locations:**
+```bash
+python skills/get_weather.py compare "Paris" "London" 7
+```
+
+**Activity Recommendations:**
+```bash
+python skills/get_weather.py activity skiing "Denver, Colorado" 5
+```
+
+**Legacy Format (still supported):**
+```bash
+python skills/get_weather.py "London" "2025-11-12"
 ```
 
 ## Troubleshooting
@@ -56,3 +96,32 @@ python get_weather.py "London" "2025-11-12"
 **"location_not_found" error**: 
 - Try a more specific location name
 - Use format like "Paris, France" instead of just "Paris"
+
+**"unknown_activity" error**:
+- Supported activities: skiing, picnic, hiking, gardening, beach, cycling
+- Try using more specific activity names
+
+## Features
+
+### Weather Analysis Modes
+
+- **Current Weather**: Real-time conditions for any location
+- **Multi-Day Forecast**: Up to 7-day detailed weather forecasts
+- **Location Comparison**: Side-by-side weather analysis for travel planning
+- **Activity Recommendations**: Smart suggestions for outdoor activities based on weather conditions
+
+### Activity Intelligence
+
+The skill analyzes weather conditions for specific activities and provides:
+- **Suitability Scores**: 0-100 rating for each day
+- **Best Day Recommendations**: Optimal timing for your activity
+- **Weather Concerns**: Specific warnings about temperature, wind, or precipitation
+- **Overall Period Assessment**: Summary advice for multi-day planning
+
+Each activity has tailored criteria:
+- **Skiing**: Prefers cold temperatures, snow, low winds
+- **Picnics**: Optimal for mild temps, clear skies, light winds
+- **Hiking**: Adaptable to various conditions, avoids severe weather
+- **Gardening**: Considers humidity, recent rain, and temperature ranges
+- **Beach**: Requires warm weather, sunshine, minimal precipitation  
+- **Cycling**: Balances temperature, wind resistance, and precipitation
