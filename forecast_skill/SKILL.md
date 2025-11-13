@@ -48,12 +48,38 @@ When the user asks to compare weather between locations:
    - Two locations to compare
    - Number of days (1-7, default to 7 for "week")
 
-2. **Call the comparison script**:
+### Activity Recommendations
+
+When the user asks about weather suitability for specific activities:
+
+**Trigger phrases:**
+- "Is it good for skiing in Aspen this week?"
+- "When should I plan a picnic in the park?"
+- "What are the best days for hiking in Colorado?"
+- "Should I water my garden tomorrow?"
+
+**Supported activities:** skiing, picnic, hiking, gardening, beach, cycling
+
+1. **Extract activity and location** from the query
+   - Activity type (skiing, picnic, hiking, etc.)
+   - Location for analysis
+   - Time period (1-7 days, default to 5)
+
+2. **Call the activity script**:
    ```bash
-   python scripts/get_weather.py compare "<location1>" "<location2>" <days>
+   python scripts/get_weather.py activity "<activity_type>" "<location>" <days>
    ```
 
-3. **Present side-by-side comparison** with recommendations
+3. **Present activity-specific recommendations** with weather analysis
+
+### Multi-Location Comparison Commands
+
+For location comparisons:
+```bash
+python scripts/get_weather.py compare "<location1>" "<location2>" <days>
+```
+
+Present side-by-side comparison with recommendations for travel planning.
 
 ## Error Handling
 
@@ -84,6 +110,16 @@ For multi-location comparisons, the script returns:
   - `forecasts`: Array of daily forecasts with temps, conditions, precipitation
 - `recommendations`: Array of comparison insights and suggestions
 
+### Activity Recommendation Response
+For activity analysis, the script returns:
+- `analysis_type`: "activity_recommendation"
+- `activity`: Activity name (e.g., "Skiing", "Picnic")
+- `overall_score`: 0-100 suitability rating
+- `overall_rating`: Text rating (Excellent/Good/Fair/Poor/Not Recommended)
+- `best_day`: Date and score of most suitable day
+- `daily_analysis`: Array of daily scores and recommendations
+- `overall_recommendation`: Summary advice for the activity period
+
 Present this information conversationally, highlighting the most relevant details for the user's query.
 
 ## Error Handling
@@ -95,6 +131,7 @@ The script may return errors in JSON format:
 - `location_not_found`: Location not recognized - ask for clarification (e.g., "Paris, France" instead of "Paris")
 - `quota_exceeded`: API daily limit reached - inform user to try later
 - `invalid_date`: Date format incorrect - use YYYY-MM-DD format
+- `unknown_activity`: Activity not recognized - show supported activities list
 - Network errors: Inform user the weather service is temporarily unavailable
 
 ## Examples
@@ -107,6 +144,18 @@ The script may return errors in JSON format:
 4. Summarize: "This weekend in Boulder: Saturday will be sunny and 72°F, perfect for outdoor activities. Sunday looks cooler at 65°F with a chance of afternoon showers."
 
 **User:** "Should I bring an umbrella to Tokyo tomorrow?"
+**Action:**
+1. Extract: location="Tokyo", date=tomorrow
+2. Call: `python scripts/get_weather.py forecast Tokyo 1`
+3. Check precipitation and respond: "Tomorrow in Tokyo has a 70% chance of rain with 5mm expected. Definitely bring an umbrella!"
+
+**User:** "Is this week good for skiing in Vail?"
+**Action:**
+1. Extract: activity="skiing", location="Vail", days=7
+2. Call: `python scripts/get_weather.py activity skiing Vail 7`
+3. Analyze response: "This week looks excellent for skiing in Vail! Overall score: 85/100. Best conditions on Wednesday with fresh powder and temps around -2°C. Thursday and Friday also look great with clear skies."
+
+**User:** "Compare weather in London vs Paris next week"
 **Action:**
 1. Extract: location="Tokyo", date=tomorrow
 2. Call script
