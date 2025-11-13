@@ -26,10 +26,16 @@ The build script will:
 ## Usage
 
 Ask Claude weather questions and the skill automatically activates:
+
+**Single Location Weather:**
 - "What's the weather like in Paris tomorrow?"
 - "Will it rain in Seattle this weekend?"
 - "Should I bring a jacket to Denver next week?"
-- "Compare the weather in London and Berlin next Monday"
+
+**Multi-Location Comparison:** 
+- "Compare weather in Paris vs London next week"
+- "Which city has better weather this week, Berlin or Amsterdam?"
+- "Paris or Rome for a 5-day trip?"
 
 ### Local Testing
 ```bash

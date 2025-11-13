@@ -26,7 +26,9 @@ Once uploaded to Claude, ask questions like:
 - "What's the weather in Tokyo tomorrow?"
 - "Will it rain in London this weekend?"
 - "Should I bring a jacket to Seattle next week?"
-- "Compare the weather in Paris and Rome today"
+- "Compare the weather in Paris vs London next week"
+- "Which city has better weather this week, Berlin or Amsterdam?"
+- "Paris or Rome for a 5-day trip?"
 
 TROUBLESHOOTING
 ===============
