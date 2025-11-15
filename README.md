@@ -2,6 +2,14 @@
 
 A Claude Skill that provides real-time weather forecasts using the OpenWeatherMap API.
 
+## ⚠️ Network Requirements
+
+**Important**: This skill requires HTTPS network access to `api.openweathermap.org`. 
+
+Some Claude environments may need this domain added to their allowed network list. If you encounter connection errors, you may need to:
+- Update your Claude environment's network settings to allow `api.openweathermap.org`
+- Contact your administrator if you're in a restricted environment
+
 ## Quick Start
 
 1. Clone this repository
@@ -100,6 +108,11 @@ python skills/get_weather.py "London" "2025-11-12"
 **"unknown_activity" error**:
 - Supported activities: skiing, picnic, hiking, gardening, beach, cycling
 - Try using more specific activity names
+
+**Network domain restrictions**:
+- Claude environments may need `api.openweathermap.org` added to allowed network domains
+- If you get network/connection errors, check your Claude environment's network settings
+- This skill requires external API access to function properly
 
 ## Features
 

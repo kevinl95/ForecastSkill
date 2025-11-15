@@ -14,26 +14,41 @@ This skill requires an OpenWeatherMap API key to be configured in `config.json` 
 **Setup (done once before uploading the skill):**
 1. Get a free API key at https://openweathermap.org/api
 2. Edit `config.json` and replace `PASTE_YOUR_API_KEY_HERE` with your key
-3. Upload the skill to Claude
+3. Ensure `api.openweathermap.org` is in your Claude environment's allowed network domains
+4. Upload the skill to Claude
+
+**Network Requirements:**
+- This skill makes HTTPS requests to `api.openweathermap.org`
+- Some Claude environments may require this domain to be added to allowed network lists
+- Contact your administrator if you encounter connection errors
 
 See `SETUP.txt` for detailed instructions.
 
 ## Usage
 
+### Understanding API Limitations
+
+**Important**: The OpenWeatherMap free tier provides:
+- Current weather for any date (today)
+- 5-day forecast maximum (today + 4 future days)
+- If a user asks for weather beyond 5 days, explain the limitation and suggest alternatives
+
 ### Single Location Forecast
 
 When the user asks about weather for one location:
 
-1. **Extract location and date** from the query
-   - Location: City name (e.g., "Paris", "New York", "London, UK")
-   - Date: YYYY-MM-DD format (default to today if not specified)
+**Modern format (preferred)**:
+```bash
+python skills/get_weather.py current "<location>"          # Current weather
+python skills/get_weather.py forecast "<location>" <days>  # Multi-day forecast (1-5 days)
+```
 
-2. **Call the weather script**:
-   ```bash
-   python scripts/get_weather.py "<location>" "<date>"
-   ```
+**Legacy format (still supported)**:
+```bash
+python skills/get_weather.py "<location>" "<YYYY-MM-DD>"
+```
 
-3. **Parse the JSON response** and format naturally for the user
+**Important**: The script is located at `skills/get_weather.py` (not `scripts/`)
 
 ### Multi-Location Comparison
 
@@ -44,9 +59,12 @@ When the user asks to compare weather between locations:
 - "Paris or Berlin next week?"
 - "Which city has better weather this week?"
 
-1. **Extract locations and timeframe** from the query
-   - Two locations to compare
-   - Number of days (1-7, default to 7 for "week")
+**Command format**:
+```bash
+python skills/get_weather.py compare "<location1>" "<location2>" <days>
+```
+
+**Important**: Days parameter is limited to 1-5 due to API forecast limits.
 
 ### Activity Recommendations
 
@@ -60,23 +78,18 @@ When the user asks about weather suitability for specific activities:
 
 **Supported activities:** skiing, picnic, hiking, gardening, beach, cycling
 
-1. **Extract activity and location** from the query
-   - Activity type (skiing, picnic, hiking, etc.)
-   - Location for analysis
-   - Time period (1-7 days, default to 5)
+**Command format**:
+```bash
+python skills/get_weather.py activity "<activity_type>" "<location>" <days>
+```
 
-2. **Call the activity script**:
-   ```bash
-   python scripts/get_weather.py activity "<activity_type>" "<location>" <days>
-   ```
-
-3. **Present activity-specific recommendations** with weather analysis
+**Important**: Days parameter is limited to 1-5 due to API forecast limits.
 
 ### Multi-Location Comparison Commands
 
 For location comparisons:
 ```bash
-python scripts/get_weather.py compare "<location1>" "<location2>" <days>
+python skills/get_weather.py compare "<location1>" "<location2>" <days>
 ```
 
 Present side-by-side comparison with recommendations for travel planning.
@@ -87,6 +100,10 @@ Present side-by-side comparison with recommendations for travel planning.
 - **invalid_api_key**: "Invalid OpenWeatherMap API key. Please check your key in config.json."
 - **location_not_found**: Ask for a more specific location (e.g., "Paris, France" instead of "Paris")
 - **quota_exceeded**: "The weather service has reached its daily limit. Please try again later."
+- **date_not_available**: Forecast is limited to 5 days maximum. When this occurs:
+  - Explain the 5-day limit to the user
+  - Offer to provide available forecast data for the timeframe that is available
+  - Suggest checking back closer to the desired date for extended forecasts
 
 ## Response Format
 
@@ -146,22 +163,22 @@ The script may return errors in JSON format:
 **User:** "Should I bring an umbrella to Tokyo tomorrow?"
 **Action:**
 1. Extract: location="Tokyo", date=tomorrow
-2. Call: `python scripts/get_weather.py forecast Tokyo 1`
+2. Call: `python skills/get_weather.py forecast Tokyo 1`
 3. Check precipitation and respond: "Tomorrow in Tokyo has a 70% chance of rain with 5mm expected. Definitely bring an umbrella!"
 
 **User:** "Is this week good for skiing in Vail?"
 **Action:**
-1. Extract: activity="skiing", location="Vail", days=7
-2. Call: `python scripts/get_weather.py activity skiing Vail 7`
-3. Analyze response: "This week looks excellent for skiing in Vail! Overall score: 85/100. Best conditions on Wednesday with fresh powder and temps around -2°C. Thursday and Friday also look great with clear skies."
+1. Extract: activity="skiing", location="Vail", days=5 (limit to 5-day forecast)
+2. Call: `python skills/get_weather.py activity skiing Vail 5`
+3. Analyze response: "The next 5 days look excellent for skiing in Vail! Overall score: 85/100. Best conditions on Wednesday with fresh powder and temps around -2°C."
+
+**User:** "Compare weather in Aspen this weekend vs next weekend"
+**Action:**
+1. Recognize next weekend exceeds 5-day limit
+2. Call: `python skills/get_weather.py forecast Aspen 2` (for this weekend)
+3. Respond: "I can provide this weekend's forecast for Aspen, but weather data beyond 5 days isn't available. This weekend looks great with sunny skies and 12°C. For next weekend, I'd suggest checking back in a few days for the most accurate forecast."
 
 **User:** "Compare weather in London vs Paris next week"
-**Action:**
-1. Extract: location="Tokyo", date=tomorrow
-2. Call script
-3. Respond based on precipitation: "Yes, I'd recommend an umbrella - Tokyo is expecting light rain tomorrow with 8mm of precipitation."
-
-**User:** "Compare weather in Paris vs London next week"
 **Action:**
 1. Extract: location1="Paris", location2="London", days=7
 2. Call: `python scripts/get_weather.py compare "Paris" "London" 7`

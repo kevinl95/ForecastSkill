@@ -61,7 +61,7 @@ def fetch_json(url, params):
 def geocode(location, api_key):
     """Convert a place name to lat/lon via OWM geocoding"""
     data = fetch_json(
-        "http://api.openweathermap.org/geo/1.0/direct",
+        "https://api.openweathermap.org/geo/1.0/direct",
         {"q": location, "limit": 1, "appid": api_key},
     )
     if "error" in data:

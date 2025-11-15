@@ -8,7 +8,15 @@ QUICK START
 
 1. Extract this zip file to a folder
 2. Upload ALL the extracted files to Claude as a skill
-3. Start asking weather questions!
+3. Ensure api.openweathermap.org is in your Claude environment's allowed network domains
+4. Start asking weather questions!
+
+NETWORK REQUIREMENTS
+====================
+
+This skill requires HTTPS access to api.openweathermap.org to function.
+Some Claude environments may need this domain added to their allowed network list.
+If you encounter connection errors, contact your administrator about network permissions.
 
 FILES INCLUDED
 ==============
