@@ -61,7 +61,7 @@ Ask Claude weather questions and the skill automatically activates:
 - "What are the best days for hiking in Portland?"
 - "Should I water my garden tomorrow?"
 
-Supported activities: skiing, picnic, hiking, gardening, beach, cycling
+Supported activities: skiing, picnic, hiking, gardening, beach, cycling, plus many other outdoor activities
 
 ### Local Testing
 
@@ -106,8 +106,9 @@ python skills/get_weather.py "London" "2025-11-12"
 - Use format like "Paris, France" instead of just "Paris"
 
 **"unknown_activity" error**:
-- Supported activities: skiing, picnic, hiking, gardening, beach, cycling
-- Try using more specific activity names
+- The system now supports many outdoor activities beyond the core list
+- If an activity isn't recognized, it will default to general outdoor activity analysis
+- Try using more descriptive terms if you get unexpected results
 
 **Network domain restrictions**:
 - Claude environments may need `api.openweathermap.org` added to allowed network domains
@@ -132,9 +133,13 @@ The skill analyzes weather conditions for specific activities and provides:
 - **Overall Period Assessment**: Summary advice for multi-day planning
 
 Each activity has tailored criteria:
-- **Skiing**: Prefers cold temperatures, snow, low winds
-- **Picnics**: Optimal for mild temps, clear skies, light winds
-- **Hiking**: Adaptable to various conditions, avoids severe weather
-- **Gardening**: Considers humidity, recent rain, and temperature ranges
-- **Beach**: Requires warm weather, sunshine, minimal precipitation  
-- **Cycling**: Balances temperature, wind resistance, and precipitation
+- **Skiing**: Optimized for snow conditions, cold temperatures, manageable winds
+- **Picnics**: Focuses on comfortable temperatures, dry conditions, light winds  
+- **Hiking**: Very adaptable to various conditions, emphasizes safety in severe weather
+- **Gardening**: Considers precipitation timing, humidity, and plant-friendly conditions
+- **Beach**: Emphasizes warmth, sunshine, and minimal precipitation
+- **Cycling**: Balances temperature comfort, wind resistance, and road safety
+- **General Outdoor**: Flexible criteria for activities like photography, camping, festivals
+- **Sports**: Adaptable profiles for running, games, and athletic activities
+
+The system automatically adapts to recognize many outdoor activities and provides appropriate weather analysis even for activities not specifically programmed.

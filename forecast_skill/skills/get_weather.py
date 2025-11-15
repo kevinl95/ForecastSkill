@@ -269,77 +269,102 @@ def compare_locations(location1, location2, num_days, api_key):
 ACTIVITY_PROFILES = {
     "skiing": {
         "name": "Skiing",
-        "ideal_temp_range": (-10, 5),  # Celsius
-        "max_wind_kph": 30,
-        "max_precip_rain": 2,  # mm - light snow is OK, rain is not
+        "ideal_temp_range": (-15, 10),  # Broader range for different skill levels and snow types
+        "max_wind_kph": 40,  # Allow stronger winds for experienced skiers
+        "max_precip_rain": 5,  # Light rain might be acceptable for some
         "min_precip_snow": 0,  # any snow is good
         "factors": {
-            "temperature": 0.3,
-            "wind": 0.2,
-            "precipitation": 0.3,
-            "conditions": 0.2
+            "temperature": 0.25,  # Less emphasis on exact temperature
+            "wind": 0.15,
+            "precipitation": 0.35,  # More emphasis on precipitation type
+            "conditions": 0.25
         }
     },
     "picnic": {
         "name": "Picnic",
-        "ideal_temp_range": (15, 28),  # Celsius
-        "max_wind_kph": 20,
-        "max_precip_rain": 0.5,  # Very light drizzle OK
-        "max_humidity": 70,
+        "ideal_temp_range": (10, 35),  # Much broader range - people have different comfort levels
+        "max_wind_kph": 30,  # Allow moderate winds
+        "max_precip_rain": 2,  # Light drizzle might be manageable with cover
+        "max_humidity": 85,  # Less strict humidity requirements
         "factors": {
-            "temperature": 0.25,
+            "temperature": 0.20,
             "wind": 0.15,
-            "precipitation": 0.35,
+            "precipitation": 0.40,  # Rain is main concern
             "conditions": 0.25
         }
     },
     "hiking": {
         "name": "Hiking",
-        "ideal_temp_range": (10, 25),  # Celsius
-        "max_wind_kph": 35,
-        "max_precip_rain": 3,  # Light rain acceptable
+        "ideal_temp_range": (0, 35),  # Very broad - hikers are adaptable
+        "max_wind_kph": 50,  # Hikers can handle strong winds better
+        "max_precip_rain": 8,  # Moderate rain acceptable with proper gear
         "factors": {
-            "temperature": 0.3,
-            "wind": 0.2,
-            "precipitation": 0.3,
-            "conditions": 0.2
+            "temperature": 0.20,  # Hikers dress appropriately
+            "wind": 0.15,
+            "precipitation": 0.35,
+            "conditions": 0.30  # Conditions matter more than exact temps
         }
     },
     "gardening": {
         "name": "Gardening",
-        "ideal_temp_range": (5, 30),  # Celsius
-        "max_wind_kph": 25,
-        "ideal_humidity_range": (40, 80),
+        "ideal_temp_range": (0, 40),  # Very broad - many gardening activities possible
+        "max_wind_kph": 35,  # Allow moderate winds
+        "ideal_humidity_range": (30, 90),  # Much broader humidity tolerance
         "factors": {
-            "temperature": 0.2,
+            "temperature": 0.15,  # Less critical - people garden in many temperatures
             "wind": 0.15,
-            "precipitation": 0.4,  # Recent rain good, current rain bad
+            "precipitation": 0.45,  # Precipitation timing most important
             "conditions": 0.25
         }
     },
     "beach": {
         "name": "Beach Day",
-        "ideal_temp_range": (22, 35),  # Celsius
-        "max_wind_kph": 25,
-        "max_precip_rain": 0,
-        "max_humidity": 75,
+        "ideal_temp_range": (18, 40),  # Broader range - some prefer cooler beach days
+        "max_wind_kph": 35,  # Allow moderate winds for activities like kiting
+        "max_precip_rain": 1,  # Still prefer dry conditions
+        "max_humidity": 85,  # More tolerant of humidity at beach
         "factors": {
-            "temperature": 0.35,
+            "temperature": 0.30,  # Temperature still important for beach
             "wind": 0.15,
             "precipitation": 0.35,
-            "conditions": 0.15
+            "conditions": 0.20
         }
     },
     "cycling": {
         "name": "Cycling",
-        "ideal_temp_range": (8, 25),  # Celsius
-        "max_wind_kph": 30,
-        "max_precip_rain": 1,
+        "ideal_temp_range": (0, 35),  # Very broad - cyclists are hardy
+        "max_wind_kph": 40,  # Allow stronger winds
+        "max_precip_rain": 3,  # Light to moderate rain manageable
+        "factors": {
+            "temperature": 0.20,  # Cyclists generate heat and dress appropriately
+            "wind": 0.30,  # Wind is major factor for cycling
+            "precipitation": 0.30,
+            "conditions": 0.20
+        }
+    },
+    # Generic catch-all profiles for broader activities
+    "outdoor": {
+        "name": "Outdoor Activity",
+        "ideal_temp_range": (5, 30),  # Moderate range for general outdoor activities
+        "max_wind_kph": 35,
+        "max_precip_rain": 3,
         "factors": {
             "temperature": 0.25,
+            "wind": 0.20,
+            "precipitation": 0.35,
+            "conditions": 0.20
+        }
+    },
+    "sports": {
+        "name": "Outdoor Sports",
+        "ideal_temp_range": (0, 35),  # Athletes adapt to many conditions
+        "max_wind_kph": 40,
+        "max_precip_rain": 2,
+        "factors": {
+            "temperature": 0.20,
             "wind": 0.25,
             "precipitation": 0.35,
-            "conditions": 0.15
+            "conditions": 0.20
         }
     }
 }
@@ -409,57 +434,76 @@ def calculate_activity_score(day, profile):
 
 
 def calculate_temperature_score(temp, profile):
-    """Score temperature suitability (0-1)"""
+    """Score temperature suitability (0-1) with gradual transitions"""
     min_temp, max_temp = profile["ideal_temp_range"]
+    ideal_center = (min_temp + max_temp) / 2
+    ideal_range = max_temp - min_temp
     
+    # Perfect score at center of ideal range
     if min_temp <= temp <= max_temp:
-        return 1.0
-    elif temp < min_temp:
-        # Too cold - gradual decline
+        # Gradual score within ideal range (peak at center)
+        distance_from_center = abs(temp - ideal_center)
+        return 1.0 - (distance_from_center / (ideal_range / 2)) * 0.2  # Max 20% penalty within range
+    
+    # Gradual decline outside ideal range
+    if temp < min_temp:
         diff = min_temp - temp
-        return max(0, 1 - (diff / 10))  # 10 degree tolerance
+        return max(0, 1.0 - (diff / 20))  # 20 degree gradual tolerance
     else:
-        # Too hot - gradual decline
         diff = temp - max_temp
-        return max(0, 1 - (diff / 15))  # 15 degree tolerance
+        return max(0, 1.0 - (diff / 25))  # 25 degree gradual tolerance for heat
 
 
 def calculate_wind_score(wind_kph, profile):
-    """Score wind suitability (0-1)"""
+    """Score wind suitability (0-1) with gradual decline"""
     max_wind = profile.get("max_wind_kph", 50)
     
-    if wind_kph <= max_wind:
-        return 1.0 - (wind_kph / (max_wind * 2))  # Gentle decline
+    # Gradual score even within acceptable range
+    if wind_kph <= max_wind * 0.5:  # Light winds get full score
+        return 1.0
+    elif wind_kph <= max_wind:  # Moderate winds get reduced score
+        excess = wind_kph - (max_wind * 0.5)
+        penalty = (excess / (max_wind * 0.5)) * 0.3  # Up to 30% penalty
+        return 1.0 - penalty
     else:
-        # Too windy
-        return max(0, 1 - ((wind_kph - max_wind) / max_wind))
+        # Gradual decline beyond max acceptable
+        excess = wind_kph - max_wind
+        return max(0, 0.7 - (excess / max_wind))  # Start from 70% and decline
 
 
 def calculate_precipitation_score(day, profile):
-    """Score precipitation suitability (0-1)"""
+    """Score precipitation suitability (0-1) with nuanced logic"""
     precip = day["precip_mm"]
     precip_prob = day["precip_probability"]
     
     # For skiing, snow is good but rain is bad
     if profile.get("min_precip_snow") is not None and day["condition_main"] == "Snow":
-        return min(1.0, precip / 5)  # More snow = better (up to 5mm)
+        return min(1.0, 0.6 + (precip / 10))  # Snow improves score gradually
     
-    # For gardening, recent rain is considered (but not current rain during activity)
+    # For gardening, consider timing and type of precipitation
     if "gardening" in profile["name"].lower():
-        if precip_prob > 80:  # High chance of rain during activity
-            return 0.2
-        elif precip > 0:  # Some recent rain is good for soil
-            return 0.8
+        if precip_prob > 70:  # High chance of rain during activity
+            return 0.3 + (0.4 * (1 - precip_prob / 100))  # 30-70% range
+        elif precip > 0:  # Some recent rain is beneficial
+            return 0.7 + min(0.2, precip / 10)  # 70-90% range
         else:
-            return 0.6  # Dry conditions OK but not ideal
+            return 0.6  # Dry conditions OK but not optimal
     
-    # For most activities, less rain = better
-    max_rain = profile.get("max_precip_rain", 0)
+    # For most activities, gradual penalty for precipitation
+    max_rain = profile.get("max_precip_rain", 2)
     
-    if precip <= max_rain:
-        return 1.0 - (precip_prob / 200)  # Small penalty for chance of rain
+    if precip <= max_rain * 0.5:  # Light precip
+        base_score = 0.9
+    elif precip <= max_rain:  # Moderate precip
+        base_score = 0.7
     else:
-        return max(0, 1 - (precip / 10))  # Heavy rain penalty
+        # Heavy rain - gradual decline
+        excess = precip - max_rain
+        base_score = max(0.1, 0.6 - (excess / 15))  # Gradual decline, min 10%
+    
+    # Additional penalty for probability
+    prob_penalty = (precip_prob / 100) * 0.2  # Up to 20% penalty for probability
+    return max(0.1, base_score - prob_penalty)
 
 
 def calculate_condition_score(condition_main, profile):
@@ -549,11 +593,7 @@ def analyze_activity(activity_query, location, num_days, api_key):
     try:
         # Parse activity from query
         activity_key = detect_activity(activity_query)
-        if not activity_key:
-            return {
-                "error": "unknown_activity",
-                "message": f"Could not recognize activity in '{activity_query}'. Supported: skiing, picnic, hiking, gardening, beach, cycling"
-            }
+        # Note: detect_activity now always returns something (fallback to "outdoor")
         
         # Get weather data
         lat, lon, resolved = geocode(location, api_key)
@@ -575,6 +615,7 @@ def analyze_activity(activity_query, location, num_days, api_key):
             "location": resolved,
             "analysis_type": "activity_recommendation",
             "query": activity_query,
+            "detected_activity": activity_key,  # Show what activity was detected
             "num_days": num_days,
             "generated_at": datetime.datetime.now().isoformat()
         })
@@ -589,23 +630,49 @@ def analyze_activity(activity_query, location, num_days, api_key):
 
 
 def detect_activity(query):
-    """Detect activity type from user query"""
+    """Detect activity type from user query with flexible matching"""
     query_lower = query.lower()
     
     activity_keywords = {
-        "skiing": ["ski", "skiing", "slopes", "powder", "snowboard"],
-        "picnic": ["picnic", "outdoor lunch", "park meal"],
-        "hiking": ["hike", "hiking", "trail", "trek", "walk"],
-        "gardening": ["garden", "gardening", "plant", "water garden", "yard work"],
-        "beach": ["beach", "swimming", "sunbathing", "seaside"],
-        "cycling": ["cycling", "bike", "biking", "bicycle"]
+        "skiing": ["ski", "skiing", "slopes", "powder", "snowboard", "snowboarding", "alpine", "nordic"],
+        "picnic": ["picnic", "outdoor lunch", "park meal", "bbq", "barbecue", "outdoor dining"],
+        "hiking": ["hike", "hiking", "trail", "trek", "trekking", "walk", "walking", "rambling", "bushwalking"],
+        "gardening": ["garden", "gardening", "plant", "planting", "water garden", "yard work", "landscaping", "weeding"],
+        "beach": ["beach", "swimming", "sunbathing", "seaside", "coastal", "surf", "surfing"],
+        "cycling": ["cycling", "bike", "biking", "bicycle", "road bike", "mountain bike", "cycle"],
+        "outdoor": ["outdoor activity", "outside", "outdoor event", "outdoor work", "outdoor fun"],
+        "sports": ["sport", "sports", "game", "match", "tournament", "athletic", "exercise", "workout", "training"]
     }
     
+    # First pass: exact activity matches
     for activity, keywords in activity_keywords.items():
         if any(keyword in query_lower for keyword in keywords):
             return activity
     
-    return None
+    # Second pass: fuzzy matches for common terms
+    generic_mappings = {
+        "run": "sports",
+        "running": "sports", 
+        "jog": "sports",
+        "jogging": "sports",
+        "play": "sports",
+        "playing": "outdoor",
+        "event": "outdoor",
+        "party": "outdoor",
+        "festival": "outdoor",
+        "concert": "outdoor",
+        "photography": "outdoor",
+        "fishing": "outdoor",
+        "camping": "outdoor",
+        "climbing": "hiking"
+    }
+    
+    for term, activity in generic_mappings.items():
+        if term in query_lower:
+            return activity
+    
+    # Default fallback for unrecognized activities
+    return "outdoor"  # Instead of None, provide a generic recommendation
 
 
 def main():

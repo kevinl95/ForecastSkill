@@ -76,7 +76,9 @@ When the user asks about weather suitability for specific activities:
 - "What are the best days for hiking in Colorado?"
 - "Should I water my garden tomorrow?"
 
-**Supported activities:** skiing, picnic, hiking, gardening, beach, cycling
+**Supported activities:** skiing, picnic, hiking, gardening, beach, cycling, plus general outdoor activities and sports
+
+**Flexible activity detection:** The system can analyze weather for many activities, even if not explicitly listed. It will automatically map unfamiliar activities to the most appropriate general category.
 
 **Command format**:
 ```bash
