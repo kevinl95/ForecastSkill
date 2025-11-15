@@ -1,5 +1,9 @@
 # ForecastSkill
 
+<div align="center">
+  <img src="logo.png" alt="ForecastSkill Logo" width="200"/>
+</div>
+
 A Claude Skill that provides real-time weather forecasts using the OpenWeatherMap API.
 
 ## ⚠️ Network Requirements
