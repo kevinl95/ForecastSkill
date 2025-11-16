@@ -156,32 +156,47 @@ The script may return errors in JSON format:
 ## Examples
 
 **User:** "What's the weather in Boulder this weekend?"
+**Claude should recognize this MAY need the skill, but users get better results with:**
+**User:** "Using the forecast-skill, what's the weather in Boulder this weekend?"
 **Action:**
 1. Extract: location="Boulder", dates=[Saturday, Sunday]
-2. Get API key (if needed)
-3. Call script twice (once for each day)
-4. Summarize: "This weekend in Boulder: Saturday will be sunny and 72°F, perfect for outdoor activities. Sunday looks cooler at 65°F with a chance of afternoon showers."
+2. Call: `python skills/get_weather.py forecast Boulder 2`
+3. Summarize: "This weekend in Boulder: Saturday will be sunny and 72°F, perfect for outdoor activities. Sunday looks cooler at 65°F with a chance of afternoon showers."
 
-**User:** "Should I bring an umbrella to Tokyo tomorrow?"
+**User:** "Using forecast-skill, should I bring an umbrella to Tokyo tomorrow?"
 **Action:**
 1. Extract: location="Tokyo", date=tomorrow
 2. Call: `python skills/get_weather.py forecast Tokyo 1`
 3. Check precipitation and respond: "Tomorrow in Tokyo has a 70% chance of rain with 5mm expected. Definitely bring an umbrella!"
 
-**User:** "Is this week good for skiing in Vail?"
+**User:** "With the forecast-skill, is this week good for skiing in Vail?"
 **Action:**
 1. Extract: activity="skiing", location="Vail", days=5 (limit to 5-day forecast)
 2. Call: `python skills/get_weather.py activity skiing Vail 5`
 3. Analyze response: "The next 5 days look excellent for skiing in Vail! Overall score: 85/100. Best conditions on Wednesday with fresh powder and temps around -2°C."
 
-**User:** "Compare weather in Aspen this weekend vs next weekend"
+**User:** "Using forecast-skill, compare weather in Aspen this weekend vs next weekend"
 **Action:**
 1. Recognize next weekend exceeds 5-day limit
 2. Call: `python skills/get_weather.py forecast Aspen 2` (for this weekend)
 3. Respond: "I can provide this weekend's forecast for Aspen, but weather data beyond 5 days isn't available. This weekend looks great with sunny skies and 12°C. For next weekend, I'd suggest checking back in a few days for the most accurate forecast."
 
-**User:** "Compare weather in London vs Paris next week"
+**User:** "Using the forecast-skill, compare weather in London vs Paris next week"
 **Action:**
 1. Extract: location1="Paris", location2="London", days=7
-2. Call: `python scripts/get_weather.py compare "Paris" "London" 7`
+2. Call: `python skills/get_weather.py compare "Paris" "London" 7`
 3. Present comparison: "Comparing Paris and London for the next week: Paris will be warmer overall (averaging 18°C vs 14°C) but has more rainy days expected (4 vs 2). London has fewer rainy days expected, making it better for outdoor activities despite cooler temperatures."
+
+## Skill Activation Tips
+
+**Best Practice**: Users should prefix queries with "Using the forecast-skill," or "With forecast-skill," to ensure reliable activation.
+
+**Examples of effective prompts:**
+- "Using the forecast-skill, [weather question]"
+- "With forecast-skill, [weather question]"  
+- "Can you use forecast-skill to [weather question]"
+
+**Why explicit activation helps:**
+- Ensures Claude uses the weather API instead of general knowledge
+- Gets real-time data rather than training data
+- Provides more accurate and current forecasts

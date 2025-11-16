@@ -47,25 +47,36 @@ Both build scripts will:
 
 ## Usage
 
-Ask Claude weather questions and the skill automatically activates:
+Ask Claude weather questions with the skill name to activate it:
 
 **Single Location Weather:**
-- "What's the weather like in Paris tomorrow?"
-- "Will it rain in Seattle this weekend?"
-- "Should I bring a jacket to Denver next week?"
+- "Using the forecast-skill, what's the weather like in Paris tomorrow?"
+- "With forecast-skill, will it rain in Seattle this weekend?"
+- "Using forecast-skill, should I bring a jacket to Denver next week?"
 
 **Multi-Location Comparison:** 
-- "Compare weather in Paris vs London next week"
-- "Which city has better weather this week, Berlin or Amsterdam?"
-- "Paris or Rome for a 5-day trip?"
+- "Using forecast-skill, compare weather in Paris vs London next week"
+- "With the forecast-skill, which city has better weather this week, Berlin or Amsterdam?"
+- "Using forecast-skill, Paris or Rome for a 5-day trip?"
 
 **Activity Recommendations:**
-- "Is it good weather for skiing in Colorado this week?"
-- "When should I plan a picnic in Central Park?"
-- "What are the best days for hiking in Portland?"
-- "Should I water my garden tomorrow?"
+- "Using forecast-skill, is it good weather for skiing in Colorado this week?"
+- "With forecast-skill, when should I plan a picnic in Central Park?"
+- "Using forecast-skill, what are the best days for hiking in Portland?"
+- "With the forecast-skill, should I water my garden tomorrow?"
 
 Supported activities: skiing, picnic, hiking, gardening, beach, cycling, plus many other outdoor activities
+
+> ** Usage Tip**: For best results, start your weather questions with "Using the forecast-skill," or "With forecast-skill," to ensure Claude uses real-time weather data instead of general knowledge.
+
+### Skill Activation
+
+To reliably activate the forecast-skill, use one of these patterns:
+
+**Recommended phrases:**
+- "Using the forecast-skill, [your weather question]"
+- "With forecast-skill, [your weather question]"
+- "Can you use forecast-skill to [your weather question]"
 
 ### Local Testing
 
