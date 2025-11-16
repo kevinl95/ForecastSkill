@@ -9,12 +9,12 @@ OUTPUT_NAME="${2:-forecast-skill.zip}"
 
 # Function to read API key securely
 read_api_key() {
-    echo "OpenWeatherMap API Key Setup"
+    echo "OpenWeather API Key Setup"
     echo "   Get a free key at: https://openweathermap.org/api"
     echo ""
     
     while true; do
-        echo -n "Enter your OpenWeatherMap API key: "
+        echo -n "Enter your OpenWeather API key: "
         read -r api_key
         
         if [[ -z "$api_key" ]]; then
@@ -27,7 +27,7 @@ read_api_key() {
             continue
         fi
         
-        # Basic validation - OpenWeatherMap keys are typically 32 hex characters
+        # Basic validation - OpenWeather keys are typically 32 hex characters
         if [[ ! "$api_key" =~ ^[a-fA-F0-9]{32}$ ]]; then
             echo "WARNING: API key doesn't match expected format (32 hex characters)."
             echo -n "Continue anyway? [y/N]: "

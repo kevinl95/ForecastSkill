@@ -4,7 +4,7 @@
   <img src="logo.png" alt="ForecastSkill Logo" width="200"/>
 </div>
 
-A Claude Skill that provides real-time weather forecasts using the OpenWeatherMap API.
+A Claude Skill that provides real-time weather forecasts using the OpenWeather API.
 
 ## ⚠️ Network Requirements
 
@@ -17,7 +17,7 @@ Some Claude environments may need this domain added to their allowed network lis
 ## Quick Start
 
 1. Clone this repository
-2. Get a free API key from [OpenWeatherMap](https://openweathermap.org/api)
+2. Get a free API key from [OpenWeather](https://openweathermap.org/api)
 3. Run the build script and enter your API key when prompted:
    - **Linux/macOS**: `./build.sh`
    - **Windows**: `.\build.ps1`
@@ -98,7 +98,7 @@ python skills/get_weather.py "London" "2025-11-12"
 ## Troubleshooting
 
 **"missing_api_key" error**: 
-- Edit `config.json` and add your OpenWeatherMap API key
+- Edit `config.json` and add your OpenWeather API key
 - Make sure you replaced the placeholder text
 
 **"invalid_api_key" error**: 

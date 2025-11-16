@@ -58,5 +58,5 @@ it publicly. If you need to share the skill, rebuild it with a fresh API key.
 NEED HELP?
 ==========
 
-- OpenWeatherMap API: https://openweathermap.org/api
+- OpenWeather API: https://openweathermap.org/api
 - Skill source code: https://github.com/kevinl95/ForecastSkill

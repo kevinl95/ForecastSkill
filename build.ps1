@@ -8,12 +8,12 @@ param(
 
 # Function to read API key securely
 function Read-ApiKey {
-    Write-Host "OpenWeatherMap API Key Setup" -ForegroundColor Cyan
+    Write-Host "OpenWeather API Key Setup" -ForegroundColor Cyan
     Write-Host "   Get a free key at: https://openweathermap.org/api" -ForegroundColor Gray
     Write-Host ""
     
     do {
-        $apiKey = Read-Host "Enter your OpenWeatherMap API key"
+        $apiKey = Read-Host "Enter your OpenWeather API key"
         
         if ([string]::IsNullOrWhiteSpace($apiKey)) {
             Write-Host "ERROR: API key cannot be empty. Please try again." -ForegroundColor Red
@@ -25,7 +25,7 @@ function Read-ApiKey {
             continue
         }
         
-        # Basic validation - OpenWeatherMap keys are typically 32 hex characters
+        # Basic validation - OpenWeather keys are typically 32 hex characters
         if ($apiKey -notmatch "^[a-fA-F0-9]{32}$") {
             Write-Host "WARNING: API key doesn't match expected format (32 hex characters)." -ForegroundColor Yellow
             $confirm = Read-Host "Continue anyway? [y/N]"

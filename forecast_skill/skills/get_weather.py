@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Weather forecast script using OpenWeatherMap API.
+Weather forecast script using OpenWeather API.
 Usage: 
   get_weather.py <location> <YYYY-MM-DD>                           # Single day forecast
   get_weather.py compare <location1> <location2> <days>             # Multi-day comparison
@@ -39,7 +39,7 @@ def fetch_json(url, params):
     try:
         with urllib.request.urlopen(full_url, timeout=10) as resp:
             if resp.getcode() == 401:
-                return {"error": "invalid_api_key", "message": "Invalid OpenWeatherMap API key."}
+                return {"error": "invalid_api_key", "message": "Invalid OpenWeather API key."}
             elif resp.getcode() == 429:
                 return {"error": "quota_exceeded", "message": "API quota exceeded. Please try again later."}
             elif resp.getcode() != 200:
@@ -47,7 +47,7 @@ def fetch_json(url, params):
             return json.load(resp)
     except urllib.error.HTTPError as e:
         if e.code == 401:
-            return {"error": "invalid_api_key", "message": "Invalid OpenWeatherMap API key."}
+            return {"error": "invalid_api_key", "message": "Invalid OpenWeather API key."}
         elif e.code == 429:
             return {"error": "quota_exceeded", "message": "API quota exceeded. Please try again later."}
         else:
@@ -682,7 +682,7 @@ def main():
     if not api_key:
         print(json.dumps({
             "error": "missing_api_key",
-            "message": "API key not configured. Please edit config.json and add your OpenWeatherMap API key."
+            "message": "API key not configured. Please edit config.json and add your OpenWeather API key."
         }))
         sys.exit(1)
 

@@ -1,15 +1,15 @@
 ---
 name: "forecast-skill"
-description: "Provides real-time weather forecasts using OpenWeatherMap API. Use when users ask about current or future weather conditions, temperature, precipitation, or weather-dependent planning for any location (e.g., 'What's the weather in Paris tomorrow?', 'Will it rain in Seattle this weekend?', 'Should I bring a jacket to Denver?')."
+description: "Provides real-time weather forecasts using OpenWeather API. Use when users ask about current or future weather conditions, temperature, precipitation, or weather-dependent planning for any location (e.g., 'What's the weather in Paris tomorrow?', 'Will it rain in Seattle this weekend?', 'Should I bring a jacket to Denver?')."
 ---
 
 # Forecast Skill
 
-Get real-time weather data and forecasts for any location worldwide using OpenWeatherMap.
+Get real-time weather data and forecasts for any location worldwide using OpenWeather.
 
 ## Prerequisites
 
-This skill requires an OpenWeatherMap API key to be configured in `config.json` before uploading.
+This skill requires an OpenWeather API key to be configured in `config.json` before uploading.
 
 **Setup (done once before uploading the skill):**
 1. Get a free API key at https://openweathermap.org/api
@@ -28,7 +28,7 @@ See `SETUP.txt` for detailed instructions.
 
 ### Understanding API Limitations
 
-**Important**: The OpenWeatherMap free tier provides:
+**Important**: The OpenWeather free tier provides:
 - Current weather for any date (today)
 - 5-day forecast maximum (today + 4 future days)
 - If a user asks for weather beyond 5 days, explain the limitation and suggest alternatives
@@ -98,8 +98,8 @@ Present side-by-side comparison with recommendations for travel planning.
 
 ## Error Handling
 
-- **missing_api_key**: "The weather service isn't configured. Please edit config.json with your OpenWeatherMap API key before uploading this skill."
-- **invalid_api_key**: "Invalid OpenWeatherMap API key. Please check your key in config.json."
+- **missing_api_key**: "The weather service isn't configured. Please edit config.json with your OpenWeather API key before uploading this skill."
+- **invalid_api_key**: "Invalid OpenWeather API key. Please check your key in config.json."
 - **location_not_found**: Ask for a more specific location (e.g., "Paris, France" instead of "Paris")
 - **quota_exceeded**: "The weather service has reached its daily limit. Please try again later."
 - **date_not_available**: Forecast is limited to 5 days maximum. When this occurs:
